@@ -8,12 +8,13 @@ CREATE TABLE UserShopping (
    id SERIAL PRIMARY KEY,
    firstName VARCHAR (50) NOT NULL,
    lastName VARCHAR (50) NOT NULL,
+   username VARCHAR (50) NOT NULL,
    password VARCHAR (50) NOT NULL
 );
 
 CREATE TABLE Orders (
    id SERIAL PRIMARY KEY,
-   userId INT NOT NULL,
+   userId INT NOT NULL REFERENCES UserShopping (id),
    status VARCHAR (20) NOT NULL
 );
 
