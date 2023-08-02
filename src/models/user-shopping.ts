@@ -99,7 +99,7 @@ export class UserShopping {
     }
   }
 
-  async show(id: number): Promise<UserShoppingModel> {
+  async getById(id: number): Promise<UserShoppingModel> {
     const connection = await client.connect();
     try {
       const sql = "SELECT * FROM usershopping WHERE id=$1";

@@ -20,6 +20,7 @@ CREATE TABLE Orders (
 
 CREATE TABLE OrderItems (
    id SERIAL PRIMARY KEY,
+   ordersId INT NOT NULL REFERENCES Orders (id),
    productId INT NOT NULL REFERENCES Product (id),
    quantity INT NOT NULL
 );

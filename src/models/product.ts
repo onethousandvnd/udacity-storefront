@@ -73,7 +73,7 @@ export class Product {
     }
   }
 
-  async show(id: number): Promise<ProductModel> {
+  async getById(id: number): Promise<ProductModel> {
     const connection = await client.connect();
     try {
       const checkProductSql = "SELECT * FROM product WHERE id=$1";
