@@ -18,6 +18,12 @@ export interface OrdersModel {
   products: OrdersProductModel[];
 }
 
+export interface CreateOrUpdateOrderDto {
+  userId: number;
+  status: string;
+  products: OrdersProductModel[];
+}
+
 export class Orders {
   async getOrders(): Promise<OrdersModel[]> {
     const connection = await Client.connect();
@@ -47,7 +53,7 @@ export class Orders {
     }
   }
 
-  async create(createOrderInput: OrdersModel): Promise<OrdersModel> {
+  async create(createOrderInput: CreateOrUpdateOrderDto): Promise<OrdersModel> {
     const { products, status, userId } = createOrderInput;
     const connection = await Client.connect();
 
@@ -82,7 +88,7 @@ export class Orders {
     }
   }
 
-  async update(id: number, updateOrderInput: OrdersModel): Promise<OrdersModel> {
+  async update(id: number, updateOrderInput: CreateOrUpdateOrderDto): Promise<OrdersModel> {
     const { products, status, userId } = updateOrderInput;
     const connection = await Client.connect();
 
@@ -92,7 +98,7 @@ export class Orders {
       const order = result.rows[0];
 
       const deleteSql = "DELETE FROM orderItems WHERE ordersId = $1";
-      await connection.query(deleteSql, [updateOrderInput.id]);
+      await connection.query(deleteSql, [id]);
 
       const insertOrderProductsSql =
         "INSERT INTO orderItems (ordersId, productId, quantity) VALUES($1, $2, $3) RETURNING productId, quantity";
