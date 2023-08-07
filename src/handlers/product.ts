@@ -7,7 +7,7 @@ const productModel = new Product();
 const getAllProducts = async (req: Request, res: Response) => {
   try {
     const products = await productModel.getAll();
-    res.json(products);
+    res.json({products: products});
   } catch (error) {
     res.status(500);
     res.json(error);
@@ -91,7 +91,7 @@ const deleteProduct = async (req: Request, res: Response) => {
 };
 
 export default function productRoutes(app: Application) {
-  app.get('/products', verifyAuthToken, getAllProducts);
+  app.get('/product', verifyAuthToken, getAllProducts);
   app.post('/product', verifyAuthToken, create);
   app.get('/product/:id', verifyAuthToken, getById);
   app.put('/product/:id', verifyAuthToken, update);

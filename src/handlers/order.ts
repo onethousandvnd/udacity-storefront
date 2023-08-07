@@ -7,7 +7,7 @@ const ordersModel = new Orders();
 const getAllOrders = async (req: Request, res: Response) => {
   try {
     const orders: OrdersModel[] = await ordersModel.getOrders();
-    res.json(orders);
+    res.json({orders: orders});
   } catch (error) {
     res.status(500);
     res.json(error);
@@ -45,11 +45,10 @@ const create = async (req: Request, res: Response) => {
 const update = async (req: Request, res: Response) => {
   try {
     const id = req.params.id as unknown as number;
-    const userId = req.body.userId;
     const status = req.body.status;
     const products = req.body.products;
 
-    if (!id || !userId || !status || !products) {
+    if (!id || !status || !products) {
       res.status(400);
       res.send(
         'Bad request!'
@@ -60,7 +59,7 @@ const update = async (req: Request, res: Response) => {
     const order = await ordersModel.update(id, {
       products,
       status,
-      userId,
+      userId: 0
     });
 
     res.json(order);
@@ -127,7 +126,7 @@ const deleteOrders = async (req: Request, res: Response) => {
 };
 
 export default function ordersRoutes(app: Application) {
-  app.get('/orders', verifyAuthToken, getAllOrders);
+  app.get('/order', verifyAuthToken, getAllOrders);
   app.post('/order', verifyAuthToken, create);
   app.put('/order/:id', verifyAuthToken, update);
   app.get('/order/get-by-id/:id', verifyAuthToken, getById);

@@ -9,7 +9,7 @@ CREATE TABLE UserShopping (
    firstName VARCHAR (50) NOT NULL,
    lastName VARCHAR (50) NOT NULL,
    username VARCHAR (50) NOT NULL,
-   password VARCHAR (50) NOT NULL
+   password VARCHAR (1000) NOT NULL
 );
 
 CREATE TABLE Orders (

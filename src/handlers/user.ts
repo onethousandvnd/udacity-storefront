@@ -8,7 +8,7 @@ const getAll = async (req: Request, res: Response) => {
   try {
     const users: UserShoppingModel[] = await userModel.getAll();
 
-    res.json(users);
+    res.json({users: users});
   } catch (error) {
     res.status(500);
     res.json(error);
@@ -21,7 +21,6 @@ const create = async (req: Request, res: Response) => {
     const lastName = req.body.lastName;
     const username = req.body.username;
     const password = req.body.password;
-
     if (!firstName || !lastName || !username || !password) {
       res.status(400);
       res.send(
@@ -115,7 +114,7 @@ const authenticate = async (req: Request, res: Response) => {
     if (!username || !password) {
       res.status(400);
       res.send(
-        'Please provide a valid input for param eg. :username, :password'
+        'Bad request!'
       );
       return false;
     }
@@ -125,7 +124,7 @@ const authenticate = async (req: Request, res: Response) => {
       res.send(`Error! Invalid username or password!`);
       return false;
     }
-    res.json(getTokenByUser(user));
+    res.json({token: getTokenByUser(user)});
   } catch (error) {
     res.status(500);
     res.json(error);
@@ -133,10 +132,10 @@ const authenticate = async (req: Request, res: Response) => {
 };
 
 export default function userRoutes(app: Application) {
-  app.get('/users',verifyAuthToken, getAll);
-  app.post('/user',verifyAuthToken, create);
+  app.get('/user',verifyAuthToken, getAll);
+  app.post('/user', create);
   app.get('/user/:id',verifyAuthToken, getById);
   app.put('/user/:id', verifyAuthToken, update);
   app.delete('/user/:id', verifyAuthToken, deleteUser);
-  app.get('/user/authenticate', authenticate);
+  app.post('/user/authenticate', authenticate);
 }

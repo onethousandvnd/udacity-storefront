@@ -89,7 +89,7 @@ export class Orders {
   }
 
   async update(id: number, updateOrderInput: CreateOrUpdateOrderDto): Promise<OrdersModel> {
-    const { products, status, userId } = updateOrderInput;
+    const { products, status } = updateOrderInput;
     const connection = await Client.connect();
 
     try {
