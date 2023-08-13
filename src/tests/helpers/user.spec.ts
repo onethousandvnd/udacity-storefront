@@ -6,7 +6,7 @@ const request = supertest(app);
 describe('User handler specification', () => {
 
   const _createUserInput: CreateUserDto = {
-    username: 'binhtt22',
+    username: 'binhtt21',
     firstName: 'binh',
     lastName: 'tran',
     password: 'abc123',

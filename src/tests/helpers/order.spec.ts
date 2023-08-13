@@ -6,84 +6,109 @@ import { CreateOrUpdateOrderDto } from '../../models/orders';
 
 const request = supertest(app);
 
-// describe('Order Handler', () => {
-//   let token: string;
-//   let userId: number;
-//   let productId: number;
-//   let orderId: number;
+describe('Order Handler', () => {
+  let token: string;
+  let userId: number;
+  let productId: number;
+  let orderInput: CreateOrUpdateOrderDto;
 
-//   beforeAll(async () => {
-//     const userInput: CreateUserDto = {
-//       username: 'binhtt22',
-//       firstName: 'binh',
-//       lastName: 'tran',
-//       password: 'abc123',
-//     };
+  async function createFunc(input: CreateOrUpdateOrderDto): Promise<any> {
+    const res = await request
+    .post('/order')
+    .set('Authorization', 'Bearer ' + token)
+    .send(input);
+    return { id: res.body.id, userId: res.body.userid, status: res.body.status, statusCode: res.statusCode};
+  }
 
-//     const res = await request
-//       .post('/user')
-//       .send(userInput);
+  beforeAll(async () => {
+    const userInput: CreateUserDto = {
+      username: 'binhtt25',
+      firstName: 'binh',
+      lastName: 'tran',
+      password: 'abc123',
+    };
 
-//     token = res.body.token;
-//     userId = res.body.id;
-
-//     const product: CreateAndUpdateProductDto = {
-//       name: 'productA',
-//       price: 100,
-//     };
-
-//     const resProduct = await request
-//       .post('/product')
-//       .send(product)
-//       .set('Authorization', 'bearer ' + token);
-
-//       productId = resProduct.body.id;
-//   });
-
-//   it('should create order successfully', async (done) => {
-//     const res = await request
-//       .post('/order')
-//       .set('Authorization', 'Bearer ' + token)
-//       .send({
-//         products: [
-//           {
-//             productId: productId,
-//             quantity: 10,
-//           },
-//         ],
-//         userId: userId,
-//         status: 'A',
-//       } as CreateOrUpdateOrderDto);
+    const res = await request
+      .post('/user')
+      .send(userInput);
     
-//     orderId = res.body.id;
-//     expect(res.statusCode).toBe(200);
-//     done();
-//   });
+    token = res.body.token;
+    userId = res.body.id;
 
-//   it('should get all orders successfully', async (done) => {
-//     const res = await request
-//       .get('/order')
-//       .set('Authorization', 'Bearer ' + token)
+    const product: CreateAndUpdateProductDto = {
+      name: 'productA',
+      price: 100,
+    };
 
-//     expect(res.statusCode).toBe(200);
-//     done();
-//   });
+    const resProduct = await request
+      .post('/product')
+      .send(product)
+      .set('Authorization', 'bearer ' + token);
 
-//   it('should get order by id successfully', async (done) => {
-//     const res = await request
-//       .get(`/order/${orderId}`)
-//       .set('Authorization', 'Bearer ' + token)
+    productId = resProduct.body.id;
 
-//     expect(res.statusCode).toBe(200);
-//     done();
-//   });
+    orderInput = {
+        products: [
+            {
+                productId: productId ?? 1,
+                quantity: 10,
+            },
+            ],
+            userId: userId ?? 1,
+            status: 'A'
+    }
+  });
 
-//   it('should delete order successfully', async (done) => {
-//     const res = await request
-//       .delete(`/order/${orderId}`)
-//       .set('Authorization', 'Bearer ' + token)
+  afterAll(async () => {
+    await request
+      .delete(`/user/${userId}`)
+      .set("Authorization", "bearer " + token);
+  });
 
-//     expect(res.statusCode).toBe(200);
-//     done();
-//   });
-// });
+
+  it('should create order successfully', async (done) => {
+    const res = await createFunc(orderInput);
+    
+    expect(res.statusCode).toBe(200);
+    done();
+  });
+
+  it('should get all orders successfully', async (done) => {
+    const res = await request
+      .get('/order')
+      .set('Authorization', 'Bearer ' + token)
+
+    expect(res.statusCode).toBe(200);
+    done();
+  });
+
+  it('should get order by id successfully', async (done) => {
+    const { id } = await createFunc(orderInput);
+    const res = await request
+      .get(`/order/get-by-id/${id}`)
+      .set('Authorization', 'Bearer ' + token)
+
+    expect(res.statusCode).toBe(200);
+    done();
+  });
+
+  it('should get order by user id successfully', async (done) => {
+    const { userId } = await createFunc(orderInput);
+    const res = await request
+      .get(`/order/get-by-user-id/${userId}`)
+      .set('Authorization', 'Bearer ' + token)
+
+    expect(res.statusCode).toBe(200);
+    done();
+  });
+
+  it('should delete order successfully', async (done) => {
+    const { id } = await createFunc(orderInput);
+    const res = await request
+      .delete(`/order/${id}`)
+      .set('Authorization', 'Bearer ' + token)
+
+    expect(res.statusCode).toBe(200);
+    done();
+  });
+});
