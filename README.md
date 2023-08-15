@@ -52,3 +52,26 @@ Add JWT functionality as shown in the course. Make sure that JWTs are required f
 Before submitting, make sure that your project is complete with a `README.md`. Your `README.md` must include instructions for setting up and running your project including how you setup, run, and connect to your database. 
 
 Before submitting your project, spin it up and test each endpoint. If each one responds with data that matches the data shapes from the `REQUIREMENTS.md`, it is ready for submission!
+
+
+# Setup Environment
+## ENV file
+POSTGRES_HOST = 127.0.0.1
+POSTGRES_DB = storefront
+POSTGRES_USER = postgres
+POSTGRES_PASSWORD = root
+SECRET_KEY = abc123
+BCRYPT_PASSWORD = abc123
+SALT = 10
+
+## setup db
+1. create schema 'storefront'.
+2. run script: npm run migrate-up.
+
+## process script:
+- npm run start: run application.
+- npm run test: test API and models.
+
+## information
+- application port 3000.
+- database port: 5432.

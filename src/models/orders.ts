@@ -2,24 +2,24 @@ import Client from "../database";
 
 export interface OrdersInterface {
   id: number;
-  userId: number;
+  userid: number;
   status: string;
 }
 
 export interface OrdersProductModel {
-  productId: number;
+  productid: number;
   quantity: number;
 }
 
 export interface OrdersModel {
   id: number;
-  userId: number;
+  userid: number;
   status: string;
   products: OrdersProductModel[];
 }
 
 export interface CreateOrUpdateOrderDto {
-  userId: number;
+  userid: number;
   status: string;
   products: OrdersProductModel[];
 }
@@ -32,7 +32,7 @@ export class Orders {
       const result = await connection.query<OrdersInterface>(sql);
 
       const getOrderProductSql =
-        "SELECT productId, quantity FROM orderItems WHERE ordersId=$1";
+        "SELECT productid, quantity FROM orderItems WHERE ordersid=$1";
       const Orders: OrdersModel[] = [];
 
       for (const order of result.rows) {
@@ -54,24 +54,24 @@ export class Orders {
   }
 
   async create(createOrderInput: CreateOrUpdateOrderDto): Promise<OrdersModel> {
-    const { products, status, userId } = createOrderInput;
+    const { products, status, userid } = createOrderInput;
     const connection = await Client.connect();
 
     try {
       const insertOrderSql =
-        "INSERT INTO Orders (userId, status) VALUES($1, $2) RETURNING *";
-      const result = await connection.query<OrdersModel>(insertOrderSql, [userId, status]);
+        "INSERT INTO Orders (userid, status) VALUES($1, $2) RETURNING *";
+      const result = await connection.query<OrdersModel>(insertOrderSql, [userid, status]);
       const order = result.rows[0];
 
       const insertOrderProductsSql =
-        "INSERT INTO orderItems (ordersId, productId, quantity) VALUES($1, $2, $3) RETURNING productId, quantity";
+        "INSERT INTO orderItems (ordersid, productid, quantity) VALUES($1, $2, $3) RETURNING productid, quantity";
       const orderProducts: OrdersProductModel[] = [];
 
       for (const product of products) {
-        const { productId, quantity } = product;
+        const { productid, quantity } = product;
         const result = await connection.query<OrdersProductModel>(insertOrderProductsSql, [
           order.id,
-          productId,
+          productid,
           quantity,
         ]);
         orderProducts.push(result.rows[0]);
@@ -97,17 +97,17 @@ export class Orders {
       const result = await connection.query<OrdersInterface>(sql, [status, id]);
       const order = result.rows[0];
 
-      const deleteSql = "DELETE FROM orderItems WHERE ordersId = $1";
+      const deleteSql = "DELETE FROM orderItems WHERE ordersid = $1";
       await connection.query(deleteSql, [id]);
 
       const insertOrderProductsSql =
-        "INSERT INTO orderItems (ordersId, productId, quantity) VALUES($1, $2, $3) RETURNING productId, quantity";
+        "INSERT INTO orderItems (ordersid, productid, quantity) VALUES($1, $2, $3) RETURNING productid, quantity";
       const orderProducts: OrdersProductModel[] = [];
 
       for (const product of products) {
         const result = await connection.query<OrdersProductModel>(insertOrderProductsSql, [
           order.id,
-          product.productId,
+          product.productid,
           product.quantity,
         ]);
         orderProducts.push(result.rows[0]);
@@ -136,7 +136,7 @@ export class Orders {
 
       const order = result.rows[0];
       const getOrderProductSql =
-        "SELECT productId, quantity FROM orderItems WHERE ordersId=$1";
+        "SELECT productid, quantity FROM orderItems WHERE ordersid=$1";
       const resultOrderItem = await connection.query<OrdersProductModel>(
         getOrderProductSql,
         [id]
@@ -155,7 +155,7 @@ export class Orders {
   async getByUserId(id: number): Promise<OrdersModel[]> {
     const connection = await Client.connect();
     try {
-      const sql = "SELECT * FROM orders WHERE userId=$1";
+      const sql = "SELECT * FROM orders WHERE userid=$1";
       const result = await connection.query<OrdersInterface>(sql, [id]);
 
       if (result.rowCount == 0) {
@@ -163,7 +163,7 @@ export class Orders {
       }
 
       const getOrderProductSql =
-        "SELECT productId, quantity FROM orderItems WHERE ordersId=$1";
+        "SELECT productid, quantity FROM orderItems WHERE ordersid=$1";
       const ordersModel: OrdersModel[] = [];
 
       for (const order of result.rows)
@@ -187,23 +187,23 @@ export class Orders {
     }
   }
 
-  async deleteOrders(ordersId: number): Promise<OrdersInterface> {
+  async deleteOrder(ordersid: number): Promise<OrdersInterface> {
     const connection = await Client.connect();
     try {
       const checkOrderSql = "SELECT * FROM orders WHERE id=$1";
       let checkResult = await connection.query<OrdersInterface>(checkOrderSql, [
-        ordersId,
+        ordersid,
       ]);
 
       if (checkResult.rowCount == 0) {
         throw new Error(`Order does not exist!`);
       }
 
-      const getOrderProductsSql = "DELETE FROM orderItems WHERE ordersId=$1";
-      await connection.query(getOrderProductsSql, [ordersId]);
+      const getOrderProductsSql = "DELETE FROM orderItems WHERE ordersid=$1";
+      await connection.query(getOrderProductsSql, [ordersid]);
 
       const sql = "DELETE FROM orders WHERE id=$1";
-      const result = await connection.query<OrdersInterface>(sql, [ordersId]);
+      const result = await connection.query<OrdersInterface>(sql, [ordersid]);
       return result.rows[0];
     } catch (err) {
       throw new Error(`System error! Cannot delete order.`);

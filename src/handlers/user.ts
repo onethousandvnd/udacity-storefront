@@ -17,11 +17,11 @@ const getAll = async (req: Request, res: Response) => {
 
 const create = async (req: Request, res: Response) => {
   try {
-    const firstName = req.body.firstName;
-    const lastName = req.body.lastName;
+    const firstname = req.body.firstname;
+    const lastname = req.body.lastname;
     const username = req.body.username;
     const password = req.body.password;
-    if (!firstName || !lastName || !username || !password) {
+    if (!firstname || !lastname || !username || !password) {
       res.status(400);
       res.send(
         'Bad request!'
@@ -29,8 +29,8 @@ const create = async (req: Request, res: Response) => {
       return false;
     }
     const user = await userModel.create({
-      firstName,
-      lastName,
+      firstname,
+      lastname,
       username,
       password,
     });
@@ -48,10 +48,10 @@ const create = async (req: Request, res: Response) => {
 const update = async (req: Request, res: Response) => {
   try {
     const id = req.params.id as unknown as number;
-    const firstName = req.body.firstName;
-    const lastName = req.body.lastName;
+    const firstname = req.body.firstname;
+    const lastname = req.body.lastname;
 
-    if (!id || !firstName || !lastName) {
+    if (!id || !firstname || !lastname) {
       res.status(400);
       res.send(
         'Bad request!'
@@ -59,8 +59,8 @@ const update = async (req: Request, res: Response) => {
       return false;
     }
     const user = await userModel.update(id, {
-      firstName,
-      lastName
+      firstname,
+      lastname
     });
 
     res.json({

@@ -5,38 +5,48 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 ## API Endpoints
 #### Products
-- Index 
-- Show
-- Create [token required]
-- [OPTIONAL] Top 5 most popular products 
-- [OPTIONAL] Products by category (args: product category)
+Get all products: [GET|Token required] '/product'
+Create a product: [POST|Token required] '/product'
+Update a product: [PUT|Token required] '/product/:id'
+Get a product: [GET|Token required] '/product/:id'
+Delete a product: [DELETE|Token required] '/product/:id'
 
 #### Users
-- Index [token required]
-- Show [token required]
-- Create N[token required]
+Get all users: [GET|Token required] '/user'
+Create a user: [POST] '/user'
+Get a user by id: [GET|Token required] '/user/:id'
+Update a user by id: [PUT|Token required] '/user/:id'
+Delete a user: [DELETE|Token required] '/user/:id'
+Get token: [POST] '/user/authenticate'
 
 #### Orders
-- Current Order by user (args: user id)[token required]
-- [OPTIONAL] Completed Orders by user (args: user id)[token required]
+Get all orders: [GET|Token required] '/order'
+Create an order: [POST|Token required] '/order'
+Update an order: [PUT|Token required] '/order/:id'
+Get an order by id: [GET|Token required] '/order/get-by-id/:id'
+Get an order by user id: [GET|Token required] '/order/get-by-user-id/:userid'
+Delete an order: [DELETE|Token required] '/order/:id'
 
 ## Data Shapes
 #### Product
--  id
-- name
-- price
-- [OPTIONAL] category
+- id: number
+- name: string
+- price: number
 
 #### User
-- id
-- firstName
-- lastName
-- password
+- id: number
+- firstname: string
+- lastname: string
+- username: string
+- password: string
 
 #### Orders
-- id
-- id of each product in the order
-- quantity of each product in the order
-- user_id
-- status of order (active or complete)
+- id: number
+- userid: number
+- status: string
 
+#### OrderItems
+- id: number
+- ordersid: number
+- productid: number
+- quantity: number

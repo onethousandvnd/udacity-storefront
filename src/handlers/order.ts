@@ -17,11 +17,11 @@ const getAllOrders = async (req: Request, res: Response) => {
 const create = async (req: Request, res: Response) => {
   try {
 
-    const userId = req.body.userId;
+    const userid = req.body.userid;
     const products = req.body.products;
     let status = req.body.status;
 
-    if (!userId || !products) {
+    if (!userid || !products) {
       res.status(400);
       res.send(
         'Bad request!'
@@ -33,7 +33,7 @@ const create = async (req: Request, res: Response) => {
     const order = await ordersModel.create({
       products,
       status,
-      userId,
+      userid,
     });
     res.json(order);
   } catch (error) {
@@ -59,7 +59,7 @@ const update = async (req: Request, res: Response) => {
     const order = await ordersModel.update(id, {
       products,
       status,
-      userId: 0
+      userid: 0
     });
 
     res.json(order);
@@ -89,7 +89,7 @@ const getById = async (req: Request, res: Response) => {
 
 const getByUserId = async (req: Request, res: Response) => {
     try {
-      const id = req.params.userId as unknown as number;
+      const id = req.params.userid as unknown as number;
 
       if (!id) {
         res.status(400);
@@ -107,7 +107,7 @@ const getByUserId = async (req: Request, res: Response) => {
 
 
 
-const deleteOrders = async (req: Request, res: Response) => {
+const deleteOrder = async (req: Request, res: Response) => {
   try {
     const id = req.params.id as unknown as number;
 
@@ -117,7 +117,7 @@ const deleteOrders = async (req: Request, res: Response) => {
       return false;
     }
 
-    await ordersModel.deleteOrders(id);
+    await ordersModel.deleteOrder(id);
     res.send("Delete order success!");
   } catch (error) {
     res.status(500);
@@ -130,6 +130,6 @@ export default function ordersRoutes(app: Application) {
   app.post('/order', verifyAuthToken, create);
   app.put('/order/:id', verifyAuthToken, update);
   app.get('/order/get-by-id/:id', verifyAuthToken, getById);
-  app.get('/order/get-by-user-id/:userId', verifyAuthToken, getByUserId);
-  app.delete('/order/:id', verifyAuthToken, deleteOrders);
+  app.get('/order/get-by-user-id/:userid', verifyAuthToken, getByUserId);
+  app.delete('/order/:id', verifyAuthToken, deleteOrder);
 }

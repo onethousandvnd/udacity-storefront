@@ -3,22 +3,22 @@ import client from "../database";
 
 export interface UserShoppingModel {
   id: number;
-  firstName: string;
-  lastName: string;
+  firstname: string;
+  lastname: string;
   username: string;
   password: string;
 }
 
 export interface CreateUserDto {
-  firstName: string;
-  lastName: string;
+  firstname: string;
+  lastname: string;
   username: string;
   password: string;
 }
 
 export interface UpdateUserDto {
-  firstName: string;
-  lastName: string;
+  firstname: string;
+  lastname: string;
 }
 
 export class UserShopping {
@@ -35,7 +35,7 @@ export class UserShopping {
   }
 
   async create(user: CreateUserDto): Promise<UserShoppingModel> {
-    const { firstName, lastName, username, password } = user;
+    const { firstname, lastname, username, password } = user;
     const connection = await client.connect();
     try {
       const checkUserSql = "SELECT * FROM usershopping WHERE username=$1";
@@ -49,14 +49,14 @@ export class UserShopping {
       }
 
       const sql =
-        "INSERT INTO usershopping (firstName, lastName, username, password) VALUES($1, $2, $3, $4) RETURNING *";
+        "INSERT INTO usershopping (firstname, lastname, username, password) VALUES($1, $2, $3, $4) RETURNING *";
       const hash = bcrypt.hashSync(
         password + process.env.BCRYPT_PASSWORD,
         parseInt(process.env.SALT as string, 10)
       );
       var result = await connection.query<UserShoppingModel>(sql, [
-        firstName,
-        lastName,
+        firstname,
+        lastname,
         username,
         hash,
       ]);
@@ -85,10 +85,10 @@ export class UserShopping {
       }
 
       const sql =
-        "UPDATE usershopping SET firstName=$1, lastName=$2 WHERE id=$3 RETURNING *";
+        "UPDATE usershopping SET firstname=$1, lastname=$2 WHERE id=$3 RETURNING *";
       const result = await connection.query(sql, [
-        updateUserInput.firstName,
-        updateUserInput.lastName,
+        updateUserInput.firstname,
+        updateUserInput.lastname,
         id,
       ]);
       return result.rows[0];
