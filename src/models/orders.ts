@@ -187,7 +187,7 @@ export class Orders {
     }
   }
 
-  async deleteOrder(ordersid: number): Promise<OrdersInterface> {
+  async deleteOrder(ordersid: number): Promise<boolean> {
     const connection = await Client.connect();
     try {
       const checkOrderSql = "SELECT * FROM orders WHERE id=$1";
@@ -203,8 +203,8 @@ export class Orders {
       await connection.query(getOrderProductsSql, [ordersid]);
 
       const sql = "DELETE FROM orders WHERE id=$1";
-      const result = await connection.query<OrdersInterface>(sql, [ordersid]);
-      return result.rows[0];
+      await connection.query<OrdersInterface>(sql, [ordersid]);
+      return true;
     } catch (err) {
       throw new Error(`System error! Cannot delete order.`);
     } finally {

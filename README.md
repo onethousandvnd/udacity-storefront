@@ -73,5 +73,5 @@ SALT = 10
 - npm run test: test API and models.
 
 ## information
-- application port 3000.
+- application port: 3000.
 - database port: 5432.

@@ -58,7 +58,7 @@ describe('Order Model', () => {
   it('should create an order', async () => {
     const resOrder = await createOrder();
     await deleteOrder(resOrder.id);
-    expect(resOrder).toEqual(resOrder);
+    expect(resOrder).toEqual({id: resOrder.id, ...order});
   });
 
   it('should get list of orders', async () => {
@@ -102,11 +102,7 @@ describe('Order Model', () => {
 
   it('should delete an order', async () => {
     const resOrder = await createOrder();
-    await orderModel.deleteOrder(resOrder.id);
-    try {
-      await orderModel.getById(resOrder.id);
-    } catch(err: any) {
-      expect(err.message).toBe(`System error! Cannot find order.`);
-    }
+    const res = await orderModel.deleteOrder(resOrder.id);
+    expect(res).toBeTrue();
   });
 });
