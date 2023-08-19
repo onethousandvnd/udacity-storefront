@@ -91,9 +91,9 @@ const deleteProduct = async (req: Request, res: Response) => {
 };
 
 export default function productRoutes(app: Application) {
-  app.get('/product', verifyAuthToken, getAllProducts);
+  app.get('/product', getAllProducts);
   app.post('/product', verifyAuthToken, create);
-  app.get('/product/:id', verifyAuthToken, getById);
+  app.get('/product/:id', getById);
   app.put('/product/:id', verifyAuthToken, update);
   app.delete('/product/:id', verifyAuthToken, deleteProduct);
 }

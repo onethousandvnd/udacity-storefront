@@ -63,6 +63,8 @@ POSTGRES_PASSWORD = root
 SECRET_KEY = abc123
 BCRYPT_PASSWORD = abc123
 SALT = 10
+POSTGRES_DB_TEST = storefront_test
+ENV = dev or ENV = test
 
 ## setup db
 1. create schema 'storefront'.

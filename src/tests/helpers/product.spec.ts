@@ -56,8 +56,7 @@ describe("Product Handler", () => {
 
   it("should get products successfully", async (done) => {
     const res = await request
-      .get("/product")
-      .set("Authorization", "bearer " + token);
+      .get("/product");
 
     expect(res.statusCode).toBe(200);
     done();
@@ -67,8 +66,7 @@ describe("Product Handler", () => {
     const { id } = await createFunc(product);
 
     const res = await request
-      .get(`/product/${id}`)
-      .set("Authorization", "bearer " + token);
+      .get(`/product/${id}`);
 
     expect(res.statusCode).toBe(200);
     done();
